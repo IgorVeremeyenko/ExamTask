@@ -1,11 +1,13 @@
 ﻿
 using System.Diagnostics;
 using System.Net;
+using System.Web.Http;
 
 namespace ExamTask
 {
     public class Requests
     {
+        private static HttpClient _httpClient;
         public Dictionary<int, string> Request(string url)
         {
             
@@ -27,15 +29,15 @@ namespace ExamTask
             return null;
         }
 
-        public async void  StartWebRequest(string url)
+        public async Task<HttpWebResponse> StartWebRequest(string url)
         {
-            var request = WebRequest.Create(url);
-            var response = (HttpWebResponse)await Task.Factory
-                .FromAsync(request.BeginGetResponse,
-                                        request.EndGetResponse,
-                                        null);
-            Debug.Assert(response.StatusCode == HttpStatusCode.OK);
-            Console.WriteLine(response.StatusCode);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+
+            return (HttpWebResponse)request.GetResponse();
+
+
         }
 
 

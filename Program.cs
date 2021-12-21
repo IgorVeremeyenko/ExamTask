@@ -1,30 +1,26 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using ExamTask;
-using System.Collections.Generic;
 
+Checker checker = new Checker();//class Checker
+Showing show = new Showing();//show results
+Validation validation = new Validation();
 Console.WriteLine("Введите количество сайтов которые хотите проверить");
-string val = string.Empty;
-int count = 0;
+string val;//adress url
+int count = 0;//adress count
 int tryings = 0;
-string url = string.Empty;
-var wrongUrl = new List<string>();
-var urls = new List<string>();
-var requests = new Requests();
-var result = new List<Dictionary<int, string>>();
-var show = new Showing();
-
-while(tryings <= 4)
+List<string> listUrls = new List<string>();
+while (tryings <= 4)
 {
     try
     {
-        val = Console.ReadLine()!;
+        val = Console.ReadLine()!;       
         count = int.Parse(val);
         break;
     }
-    catch (FormatException msg)
+    catch (FormatException)
     {
-        if(tryings == 4)
+        if (tryings == 4)
         {
             Console.WriteLine("Приложение будет закрыто");
             break;
@@ -33,28 +29,33 @@ while(tryings <= 4)
     }
     tryings++;
 }
-Console.WriteLine("Введите {0} сайт(ов) через запятую", count);
-while(count > 0)
-{
-    url = Console.ReadLine();
-    requests.StartWebRequest(url);
-     
     
-    count--;
+Console.WriteLine("Введите {0} сайт(ов) через запятую", count);
+char[] charsToTrim = { '«', '»', ' ', '\'', ']', '[', '%' };
+string url = Console.ReadLine();
+string result = url.Trim(charsToTrim);
+var userArray = result.Split(',');
+foreach (var item in userArray)
+{
+    validation.Validate(item);
+    if (validation.Url != null)
+    {
+        listUrls.Add(item);
+        count--;
+    }
+    else
+    {
+        Console.WriteLine("Not valid url");
+        break;
+    }
 }
 
-foreach (var item in result)
+if(validation.Url != null)
 {
-    if (item.ContainsKey(404))
-    {
-        show.Show404(item);
-    }
-    if (item.ContainsKey(200))
-    {
-        show.Show200(item);
-    }
-    if (item.ContainsKey(500))
-    {
-        show.Show500(item);
-    }
+    checker.WaitingResults = listUrls;
+    show.ShowUnchecked(checker.WaitingResults);
+    checker.Checking();
+
+    show.Show(checker.Checked);
 }
+

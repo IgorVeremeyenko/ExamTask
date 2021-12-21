@@ -3,46 +3,63 @@ namespace ExamTask
 {
     public class Showing
     {
-        public void Show200(Dictionary<int, string> value)
+        public void Show(List<Dictionary<int, string>> value)
         {
-            if (value[200] != null)
+            int c200 = 0;
+            int c404 = 0;
+            int c500 = 0;
+            foreach (var item in value)
             {
-                ShowOptions(value, 200);
+                if (item.ContainsKey(200))
+                {
+                    ShowOptions(item, 200);
+                    c200++;
+                }
+                if (item.ContainsKey(404))
+                {
+                    ShowOptions(item, 404);
+                    c404++;
+                }
+                if (item.ContainsKey(500))
+                {
+                    ShowOptions(item, 500);
+                    c500++;
+                }
+            }
+            Console.WriteLine("Проверены:");
+            Console.WriteLine("Доступных сайтов: [{0}(код ответа {1})]", c200, 200);
+            Console.WriteLine("Недоступных: [{0}(код ответа {1})]", c404, 404);
+            Console.WriteLine("Не известно: [{0}(код ответа {1})]", c500, 500);
+
+        }
+
+        public void ShowUnchecked(List<string> values)
+        {
+            Console.WriteLine("Ожидающие проверки");
+            foreach (var item in values)
+            {
+                Console.WriteLine(item);
             }
         }
-        public void Show404(Dictionary<int, string> value)
-        {
-            if (value[404] != null)
-            {
-                ShowOptions(value, 404);
-            }
-        }
-        public void Show500(Dictionary<int, string> value)
-        {
-            if (value[500] != null)
-            {
-                ShowOptions(value, 500);
-            }
-        }
+       
         private void ShowOptions(Dictionary<int, string> value, int code)
         {
             int c = 0;
-            if (value[code] != null)
+            foreach (var item in value)
             {
-                var count = new List<string>();
-                foreach (var item in value)
+                if (item.Value != null)
                 {
-                    count.Add(value[code]);
+                    var count = value;
+                    c = count.Count;
+                    
                 }
-
-                c = count.Count;
-                Console.WriteLine("[кол-во(200) {0}]", c);
+                else
+                {
+                    var msg = new Exception();
+                    Console.WriteLine(msg.Message);
+                }
             }
-            else
-            {
-                var msg = new Exception();
-                Console.WriteLine(msg.Message);
-            }
+            
 
         }
     }

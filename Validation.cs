@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace ExamTask
 {
@@ -11,12 +8,14 @@ namespace ExamTask
         public string Url { get; set; }
         public string Validate(string url)
         {
-            if (url == null)
+            bool isUri = Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
+            /*Regex r = new Regex("http(s)?://([\\w+?\\.\\w+])+([a-zA-Z0-9\\~\\!\\@\\#\\$\\%\\^\\&amp;\\*\\(\\)_\\-\\=\\+\\\\\\/\\?\\.\\:\\;\\'\\,]*)?", RegexOptions.IgnoreCase);*/
+            /*Match match = r.Match(url);*/
+            if (isUri)
             {
-                return string.Empty;
+                Url = url;
             }
-
-            return url;
+            return null;
         }
     }
 }
